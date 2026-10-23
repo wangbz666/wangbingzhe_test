@@ -1,0 +1,38 @@
+name: Manual Input Demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "选择模型"
+        required: true
+        type: choice
+        options:
+          - opt-125m
+          - deepseek-v2-lite
+      debug:
+        description: "是否打开调试模式"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  show-selection:
+    name: Show selected values
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print inputs
+        env:
+          SELECTED_MODEL: ${{ inputs.model }}
+          DEBUG_ENABLED: ${{ inputs.debug }}
+        run: |
+          echo "Selected model: ${SELECTED_MODEL}"
+          echo "Debug enabled: ${DEBUG_ENABLED}"
+          {
+            echo "## Manual workflow inputs"
+            echo "- Model: \`${SELECTED_MODEL}\`"
+            echo "- Debug: \`${DEBUG_ENABLED}\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
